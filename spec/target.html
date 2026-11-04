@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meaning in type — semantic font target</title>
+  <!--
+    Visual target, not a scoring implementation.
+
+    General rendering relationships (valence v is on VADER's -4 to +4 scale):
+    - Salience s = abs(v) / 4. Size = (1 + 0.4s) em; weight =
+      400 + 100 * round(4s). Greater absolute valence gets larger, heavier type.
+    - Positive valence: dark green, solid underline. Negative valence: dark
+      burgundy, double underline. Neutral presentation: dark ink, no underline.
+      The focal VADER examples are delightful (+2.8, s=.7, 1.28em, 700) and
+      terrible (-2.1, s=.525, 1.21em, 600). Other words retain baseline styling
+      in this visual target; this does not claim their VADER entries are zero.
+    - Surprise is a separate lexical cue, not supplied by VADER: unexpected
+      demonstrates surprise=1; letter-spacing = surprise * .04em, otherwise 0.
+    - Certainty is a separate lexical cue, not supplied by VADER: perhaps
+      demonstrates certainty=0 (hedged), certainly certainty=1 (confident).
+      Cue opacity = .8 + .2 * certainty; only a hedge is italic. Words without
+      a certainty cue default to upright, fully opaque text, not a confidence
+      assertion. These lexical examples illustrate general cue relationships.
+
+    Accessibility: real spaces and attached punctuation preserve the sentence
+    in DOM order, with ordinary inline spans and no per-word ARIA labels.
+    Visible explanation describes the cues; underline styles distinguish
+    sentiment without relying on color. All text uses dark foregrounds on
+    #fffdf8; even the .8-opacity hedge retains at least 4.5:1 contrast after
+    compositing. Relative sizing, wrapping and no fixed heights support zoom.
+  -->
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #262e37;
+      background: #fffdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: clamp(1.25rem, 5vw, 5rem);
+    }
+
+    main {
+      max-width: 60rem;
+      margin: clamp(1rem, 8vh, 6rem) auto;
+    }
+
+    h1 {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    .sentence {
+      margin: 0;
+      padding-block: 1.5rem 2rem;
+      border-block: 1px solid #a4a09a;
+      font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2.4rem);
+      font-weight: 400;
+      font-style: normal;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .negative, .positive {
+      text-decoration-line: underline;
+      text-decoration-thickness: .06em;
+      text-underline-offset: .16em;
+      text-decoration-skip-ink: auto;
+    }
+
+    .negative {
+      color: #842d3d;
+      font-size: 1.21em;
+      font-weight: 600;
+      text-decoration-style: double;
+    }
+
+    .positive {
+      color: #12533e;
+      font-size: 1.28em;
+      font-weight: 700;
+      text-decoration-style: solid;
+    }
+
+    .surprise { letter-spacing: .04em; }
+    .hedge { font-style: italic; opacity: .8; }
+    .confident { font-style: normal; opacity: 1; }
+
+    aside {
+      max-width: 44rem;
+      margin-top: 1.75rem;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    h2 {
+      margin: 0 0 .5rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    aside p { margin: 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Meaning in type</h1>
+    <p class="sentence"><span class="hedge">Perhaps</span> <span>the</span> <span>delay</span> <span>is</span> <span class="negative">terrible,</span> <span>but</span> <span>the</span> <span class="surprise">unexpected</span> <span>gift</span> <span>is</span> <span class="confident">certainly</span> <span class="positive">delightful.</span></p>
+    <aside aria-labelledby="reading-guide">
+      <h2 id="reading-guide">How to read the type</h2>
+      <p>Larger, heavier words carry stronger sentiment. Green with a single
+        underline marks positive sentiment; burgundy with a double underline
+        marks negative sentiment. Wider letter spacing signals surprise.
+        A softer italic signals a hedge; upright, full-opacity type is the
+        default, including confident language. The words remain readable in
+        their natural order with or without these visual cues.</p>
+    </aside>
+  </main>
+</body>
+</html>
